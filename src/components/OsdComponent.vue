@@ -27,6 +27,7 @@ export default {
     }
   },
   methods: {
+  
     renderZones: function () {
       this.viewer.clearOverlays()
       const annots = this.$store.getters.zonesOnCurrentPage
@@ -34,6 +35,7 @@ export default {
         // console.log('trying to render zone based on: ')
         // console.log(annot)
         const rawDimensions = annot.target.selector.value.substr(11).split(',')
+        console.log("raw dimention is ", rawDimensions)
         const xywh = {
           x: Math.round(rawDimensions[0]),
           y: Math.round(rawDimensions[1]),
@@ -44,6 +46,9 @@ export default {
         const measureCssLink = annot.body.find(body => body.type === 'Dataset' && body.selector.value.startsWith('measure'))?.selector.value
         const mdivCssLink = annot.body.find(body => body.type === 'Dataset' && body.selector.value.startsWith('mdiv'))?.selector.value
         const mdivIndizes = annot.body.find(body => body.type === 'Dataset' && body.selector.value.startsWith('mov_'))?.selector.value
+        
+        console.log("this is xywh " , "", xywh.x,"", xywh.y, "", xywh.w, "", xywh.h)
+
 
         const overlay = document.createElement('div')
         overlay.id = zoneId
@@ -67,12 +72,16 @@ export default {
         overlay.appendChild(label)
         overlay.addEventListener('mouseout', (e) => {
          console.log('mouseout')
+         
           this.$store.dispatch('unhoverZone', zoneId)
           e.preventDefault()
           e.stopPropagation()
         })
         overlay.addEventListener('mouseenter', (e) => {
+          console.log("this is e " , "", e.x,"", e.y, "", xywh.w, "", xywh.h, "scree x", e.x)
+
           console.log('mousenter')
+          
           this.$store.dispatch('hoverZone', zoneId)
           e.preventDefault()
           e.stopPropagation()
@@ -173,6 +182,8 @@ export default {
       // The users has selected an existing annotation
       // console.log('selected annotation')
       // console.log(annotation)
+      console.log("anno is clicked")  
+
     })
 
     this.anno.on('createAnnotation', (annotation) => {

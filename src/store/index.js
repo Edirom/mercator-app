@@ -435,7 +435,7 @@ export default createStore({
         redirect_uri: redirectUri,
         scope,
       });
-
+      console.log("this is authentication ")
       const url = `https://github.com/login/oauth/authorize?auth?code=${code}&${query}`
       fetch(url).then(resp => {
         console.log(resp.ok)

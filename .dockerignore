@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/dist
+dist
 .git
 
 
@@ -24,4 +24,4 @@ pnpm-debug.log*
 *.sw?
 
 #Electron-builder output
-/dist_electron
+dist_electron
