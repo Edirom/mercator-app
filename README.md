@@ -52,8 +52,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### Deploying to a subdirectory
 In compile stage 
 ```
-docker run --rm -p
--e VUE_APP_PUBLIC_PATH='/subdirectory/' 
+docker build \
+--build-arg VUE_APP_PUBLIC_PATH='/subfolder/' \
 dockercontainer
 ```
 
