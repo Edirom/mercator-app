@@ -448,7 +448,7 @@ export default createStore({
               const userId = data.id;
               commit('SET_ACCESS_TOKEN', { auth: accessToken })
               commit('SET_OWNER')
-
+              console.log("Loged in")
 
             } else {
               console.error('authentication failed 1', data)
