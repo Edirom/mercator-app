@@ -48,5 +48,27 @@ npm run test:lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+
+### Deploying to a subdirectory
+In compile stage 
+```
+docker run --rm -p
+-e VUE_APP_PUBLIC_PATH='/subdirectory/' 
+dockercontainer
+```
+
+### Run 
+```
+ docker run \
+-e CLIENT_ID="your client id" \
+-e CLIENT_SECRET= "your client secret"\
+-e CALL_BACK= "your call back" \
+-e VUE_APP_CALL_BACK=$CALL_BACK \
+dockercontainer
+```
+
+
+
+
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B-orange)](https://fair-software.eu)
 
