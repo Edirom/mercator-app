@@ -834,7 +834,19 @@ export default createStore({
       const imageUri = state.pages[pageIndex].uri.replace(/\/info\.json/, '') + '/full/full/0/default.jpg'
       const blob = await fetch(imageUri).then(r => r.blob())
       console.log("this is blob ", imageUri)
-
+      try {
+        const pageIndex = state.currentPage;
+        const imageUri = state.pages[pageIndex].uri.replace(/\/info\.json/, '') + '/full/full/0/default.jpg';
+        const response = await fetch(imageUri);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const blob = await response.blob();
+        // Further processing with the blob
+    } catch (error) {
+        console.error('Error fetching image blob:', error);
+        // Handle the error gracefully
+    }
       const successFunc = (json) => {
         commit('SET_LOADING', false)
         console.log('success')
