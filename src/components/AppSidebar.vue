@@ -68,7 +68,7 @@
           <font-awesome-icon icon="fa-regular fa-clone" transform="up-5 left-5"/>
         </font-awesome-layers>
       </button>
-        <!-- AUTODETECT ON ALL PAGE -->
+        <!-- AUTODETECT ON ALL PAGE
         <button class="btn btn-action" title="Autodetect measures on current page"
           :disabled="!isReady"
           @click="autoDetectAll">
@@ -77,7 +77,7 @@
             <font-awesome-icon icon="fa-regular fa-clone" transform="up-5 left-5"/>
             <font-awesome-icon icon="fa-regular fa-square" transform="up-7.5 right-6.5 shrink-3"/>
           </font-awesome-layers>
-      </button>
+      </button> -->
 
       <!-- AUTODETECT ALL PAGES -->
       <!-- <button class="btn btn-action" title="Autodetect measures throughout document"
