@@ -49,5 +49,5 @@ jobs:
               BUILDTYPE=github
     - name: deploy
       run: | 
-        curl -X POST https://keel3.edirom.de/v1/webhooks/native -H 'Content-Type: application/json' -d '{"name": "ghcr.io/edirom/cartographer-app", "tag": "dev"}'
+        curl -X POST https://keel1.edirom.de/v1/webhooks/native -H 'Content-Type: application/json' -d '{"name": "ghcr.io/edirom/cartographer-app", "tag": "dev"}'
 
