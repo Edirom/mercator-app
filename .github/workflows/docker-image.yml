@@ -2,9 +2,6 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
 
 jobs:
 
@@ -12,15 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    # - name: cartographer-app
-          # run: docker build . -t cartographer-app
-    #- run: docker-compose up -d --build
-          # Login against DockerHub registry
-   # - name: Log in to DockerHub
-    #  uses: docker/login-action@v2
-     # with:
-      #    username: vifebot
-       #   password: ${{ secrets.VIFEBOT_DOCKERHUB_TOKEN }}
     - name: Log in to GitHub Container registry
       uses: docker/login-action@v3
       with:
@@ -38,7 +26,7 @@ jobs:
          # and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
     - name: build and push Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
           context: .
           file: Dockerfile
