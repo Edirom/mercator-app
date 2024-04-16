@@ -11,10 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     # - name: cartographer-app
           # run: docker build . -t cartographer-app
-    - run: docker-compose up -d --build
+    #- run: docker-compose up -d --build
           # Login against DockerHub registry
    # - name: Log in to DockerHub
     #  uses: docker/login-action@v2
@@ -22,14 +22,14 @@ jobs:
       #    username: vifebot
        #   password: ${{ secrets.VIFEBOT_DOCKERHUB_TOKEN }}
     - name: Log in to GitHub Container registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
     - name: Extract Docker metadata
       id: meta
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
           images: |
             ghcr.io/edirom/cartographer-app
@@ -38,7 +38,7 @@ jobs:
          # and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
     - name: build and push Docker image
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
           context: .
           file: Dockerfile
@@ -50,4 +50,3 @@ jobs:
     - name: deploy
       run: | 
         curl -X POST https://keel1.edirom.de/v1/webhooks/native -H 'Content-Type: application/json' -d '{"name": "ghcr.io/edirom/cartographer-app", "tag": "dev"}'
-
