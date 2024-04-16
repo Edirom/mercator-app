@@ -12,5 +12,5 @@ FROM nginx:alpine
 ENV VUE_APP_PUBLIC_PATH="/"
 WORKDIR /etc/nginx
 COPY 40-create-ghcred.sh /docker-entrypoint.d
-COPY ngnix.conf /etc/nginx/nginx.d/default.conf
+COPY ngnix.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /usr/app/dist/ /usr/share/nginx/html

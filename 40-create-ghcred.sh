@@ -9,8 +9,8 @@
 echo $VUE_APP_PUBLIC_PATH
 ln -s /usr/share/nginx/html /usr/share/nginx/html$VUE_APP_PUBLIC_PATH
 #sed -e  "//js/++mylocation/js"
-sed -i "s+/js+$VUE_APP_PUBLIC_PATH/js+g" /usr/share/nginx/html/index.html
-sed -i "s+/css+$VUE_APP_PUBLIC_PATH/css+g" /usr/share/nginx/html/index.html
+sed -i "s+/myAppPlaceholder+$VUE_APP_PUBLIC_PATH+g" /usr/share/nginx/html/index.html
+sed -i "s+/myAppPlaceholder+$VUE_APP_PUBLIC_PATH+g" /usr/share/nginx/html/js/app.*.js
 
 # Create nginx config from environment variables
 # *prevent envsubst from killing nginx vars with 'tr' and '@'* 
