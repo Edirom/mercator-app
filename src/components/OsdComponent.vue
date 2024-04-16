@@ -182,11 +182,20 @@ export default {
       // The users has selected an existing annotation
       // console.log('selected annotation')
       // console.log(annotation)
-      console.log("anno is clicked")  
+      console.log("anno is clicked " , annotation)  
 
     })
 
     this.anno.on('createAnnotation', (annotation) => {
+
+
+     // const { x, y, width, height } = annotation.shapes[0].geometry;
+
+      // Update the x and y coordinates of the rectangle
+      // const newX = x + width; // Example: Move the rectangle to the right of the selected area
+      // const newY = y + height; // Example: Move the rectangle below the selected area
+      console.log("this is x ",  annotation)
+      // console.log("this is y " + newX)
       // The users has created a new annotation
       const newId = 'z' + uuid()
       annotation.id = newId
@@ -194,6 +203,10 @@ export default {
       this.$store.dispatch('selectZone', null)
       this.anno.clearAnnotations()
       this.renderZones()
+      console.log("anno is clicked ", annotation.target.selector)  
+
+  
+
     })
 
     this.anno.on('updateAnnotation', (annotation) => {
