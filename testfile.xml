@@ -1,0 +1,41 @@
+<mei xmlns="http://www.music-encoding.org/ns/mei" xmlns:xlink="http://www.w3.org/1999/xlink" meiversion="4.0.1" xml:id="edirom_source_47dde5ab-b8ff-4004-bfde-b65ea5a9a15e">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title type="uniform" xml:lang="de">Trüber Abschied (Manuskript)</title>
+            </titleStmt>
+            <pubStmt/>
+            <sourceDesc>
+                <source>
+                    <identifier type="siglum">Ms</identifier>
+                    <identifier type="D-KA">Mus. Hs. 1295b</identifier>
+                    <titleStmt>
+                        <title>Autograph</title>
+                    </titleStmt>
+                    <relationList>
+                        <relation rel="isEmbodimentOf" target="xmldb:exist:///db/apps/ess2023-edirom/data/edirom-edition-example/edirom_work_291f7ad8-9bb8-45eb-9186-801dec2f80d9.xml#edirom_work_291f7ad8-9bb8-45eb-9186-801dec2f80d9_exp1" type="edirom"/>
+                    </relationList>
+                </source>
+            </sourceDesc>
+        </fileDesc>
+    </meiHead>
+    <music>
+        <facsimile>
+            <surface lrx="3588" lry="4452" n="1" ulx="0" uly="0" xml:id="surface_52b0a53c-a8e9-48ce-aa4c-4bae46ce1556">
+                <graphic height="4452" target="https://digital.blb-karlsruhe.de/blbihd/i3f/v20/6118288" type="facsimile" width="3588" xml:id="graphic_cdfbfde6-4295-4274-ad58-75723f88babd"/>
+            </surface>
+            <surface lrx="3588" lry="4452" n="2" ulx="0" uly="0" xml:id="surface_e6f33593-41d0-40bb-a060-c328101cd49e">
+                <graphic height="4452" target="https://digital.blb-karlsruhe.de/blbihd/i3f/v20/6118289" type="facsimile" width="3588" xml:id="graphic_60ab99a4-ef35-4fa6-a611-23fc45bb8488"/>
+            <zone xml:id="zdcf47a35-995a-49e4-bb98-8eaea10f8227" type="measure" ulx="1118" uly="799" lrx="1774" lry="1197"/><zone xml:id="zf15b16c4-d1f9-4fec-8ad4-ae14eaf15218" type="measure" ulx="1902" uly="836" lrx="2271" lry="1327"/><zone xml:id="z182d1e08-b82b-4a5b-bcb0-064841c616da" type="measure" ulx="2463" uly="805" lrx="3090" lry="1141"/><zone xml:id="z2e7ec815-47b3-48dd-b63c-14afdab1d741" type="measure" ulx="902" uly="1499" lrx="1927" lry="2316"/><zone xml:id="zbdd42268-2c8d-4f58-a6cc-a18a34745dc5" type="measure" ulx="2097" uly="1527" lrx="2592" lry="2575"/><zone xml:id="z75c3c362-294b-4275-8f08-540ecb6f497c" type="measure" ulx="1079" uly="2866" lrx="1832" lry="3615"/></surface>
+            <surface lrx="3588" lry="4452" n="3" ulx="0" uly="0" xml:id="surface_70511d7b-0e66-42f0-939c-319898c86c11">
+                <graphic height="4452" target="https://digital.blb-karlsruhe.de/blbihd/i3f/v20/6118290" type="facsimile" width="3588" xml:id="graphic_bf1f577d-06af-4a5f-a73d-f8b20a61eaed"/>
+            </surface>
+            <surface lrx="3588" lry="4452" n="4" ulx="0" uly="0" xml:id="surface_f4e10ab5-42ab-4b93-8249-243ccc4a658d">
+                <graphic height="4452" target="https://digital.blb-karlsruhe.de/blbihd/i3f/v20/6118291" type="facsimile" width="3588" xml:id="graphic_96c9c7a5-8f08-470a-ba83-def7d6783c3d"/>
+            </surface>
+        </facsimile>
+        <body>
+
+        <mdiv xml:id="m77fc89e7-1cae-468e-ba6b-25fdab0f2189" label="Movement 1"><score><section><pb facs="#surface_e6f33593-41d0-40bb-a060-c328101cd49e" n="2"/><measure xml:id="b1d9c7063-b993-4ca3-94a6-2b263f474c78" facs="#zdcf47a35-995a-49e4-bb98-8eaea10f8227" n="1"/><measure xml:id="be2a98f61-cc41-44c3-abc6-51475bc80aa1" facs="#zf15b16c4-d1f9-4fec-8ad4-ae14eaf15218" n="2"/><measure xml:id="bef30faaf-6d23-4d95-8443-b06d860e75d5" facs="#z182d1e08-b82b-4a5b-bcb0-064841c616da" n="3"/><sb/><measure xml:id="bd91f7e60-97b6-43b6-8150-fbd3ee32108d" facs="#z2e7ec815-47b3-48dd-b63c-14afdab1d741" n="4"/><measure xml:id="b4df7b420-5112-416b-ae12-b09eea76c1f3" facs="#zbdd42268-2c8d-4f58-a6cc-a18a34745dc5" n="5"/><sb/><measure xml:id="b8477b067-cbb2-44d4-b2b6-9334da87c2be" facs="#z75c3c362-294b-4275-8f08-540ecb6f497c" n="6"/></section></score></mdiv></body>
+    </music>
+</mei>
