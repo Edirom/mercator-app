@@ -53,7 +53,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 In compile stage 
 ```
 docker build \
---build-arg VUE_APP_PUBLIC_PATH='/subfolder/' \
 dockercontainer
 ```
 
@@ -64,6 +63,7 @@ dockercontainer
 -e CLIENT_SECRET= "your client secret"\
 -e CALL_BACK= "your call back" \
 -e VUE_APP_CALL_BACK=$CALL_BACK \
+-e VUE_APP_PUBLIC_PATH="your subpath"
 dockercontainer
 ```
 
