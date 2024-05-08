@@ -1099,8 +1099,8 @@ export default createStore({
   state.pages.forEach(page => {
     const obj = {
       tileSource: page.uri,
-      width: page.width * 0.9, // Doubling the width
-      height: page.height  * 0.9, // Doubling the height
+      width: page.width,
+      height: page.height ,
       x: 0,
       y: 0
     }
