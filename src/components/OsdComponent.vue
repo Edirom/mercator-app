@@ -182,7 +182,6 @@ export default {
       // The users has selected an existing annotation
       // console.log('selected annotation')
       // console.log(annotation)
-      console.log("anno is clicked " , annotation)  
 
     })
 
