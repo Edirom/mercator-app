@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Set default value for VUE_APP_PUBLIC_PATH if not provided
 # Get VUE_APP_PUBLIC_PATH from Docker endpoint
