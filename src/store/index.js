@@ -1096,17 +1096,16 @@ export default createStore({
     },
     pages: state => {
       const arr = []
-  state.pages.forEach(page => {
-    const obj = {
-      tileSource: page.uri,
-      width: page.width,
-      height: page.height ,
-      x: 0,
-      y: 0
-    }
-    arr.push(obj)
-  })
-  return arr
+      state.pages.forEach(page => {
+        const obj = {
+          tileSource: page.uri,
+          width: page.width,
+          x: 0,
+          y: 0
+        }
+        arr.push(obj)
+      })
+      return arr
     },
     pagesDetailed: state => {
       const arr = []
