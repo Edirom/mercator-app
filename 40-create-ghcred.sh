@@ -8,7 +8,7 @@
 
 # Remove leading and trailing whitespace and slashes
 
-VUE_APP_PUBLIC_PATH=$(echo $VUE_APP_PUBLIC_PATH | xargs | sed 's/^\///;s/\/$//')
+VUE_APP_PUBLIC_PATH=$(echo $VUE_APP_PUBLIC_PATH | sed 's/^\s*\///;s/\/\s*$//')
 
 
 
