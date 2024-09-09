@@ -46,6 +46,7 @@ export default createStore({
     loading: false,
     logedin: false,
     processing: false,
+    pageDimenssion: [],
     mode: allowedModes.selection,
     existingMusicMode: false,
     selectedZoneId: null,
@@ -55,9 +56,11 @@ export default createStore({
     resultingArray: [],
     deleteZoneId: null,
     anno: null,
+    canvases: [],
     importingImages: [],
     currentMeasureId: null,
     username: null,// used for the MeasureModal
+    infoJson: []
 
     // TODO isScore: true
   },
@@ -333,7 +336,8 @@ export default createStore({
       state.importingImages.forEach(page => {
         addImportedPage(xmlDoc, page.index, page.url, page.width, page.height)
       })
-      const pageArray = getPageArray(xmlDoc)
+      console.log("state is index", state)
+      const pageArray = getPageArray(xmlDoc, state)
       state.pages = pageArray
       state.importingImages = []
       state.showPagesImportModal = false
@@ -791,7 +795,7 @@ export default createStore({
     setBranch({ commit, dispatch }, branch) {
       commit('SET_BRANCH', branch)
     },
-    importIIIF({ commit, dispatch }, url) {
+    importIIIF({ commit, dispatch, state }, url) {
       commit('SET_LOADING', true)
       fetch(url)
         .then(res => {
@@ -800,24 +804,68 @@ export default createStore({
         .then(json => {
           commit('SET_LOADING', false)
           commit('SET_PROCESSING', true)
-          // check if this is a proper IIIF Manifest, then convert to MEI
-          const isManifest = checkIiifManifest(json)
-          console.log('isManifest: ' + isManifest)
-          if (!isManifest) {
-            // do some error handling
-            return false
-          }
 
-          iiifManifest2mei(json, url, parser)
-            .then(mei => {
-              dispatch('setData', mei)
+          let canvases = json.sequences[0].canvases;
+          for (let i = 0; i < canvases.length; i++) {
+              // Do something with canvas
+              state.infoJson.push(canvases[i].images[0].resource.service['@id'] + "/info.json")
+              
+          }
+          let fetchPromises = [];
+
+          for (let i = 0; i < state.infoJson.length; i++) {
+            // Add each fetch promise to the array
+            fetchPromises.push(
+              fetch(state.infoJson[i])
+                .then(res => res.json()) // Parse the JSON from the response
+                .then(result => {
+                    // check if this is a proper IIIF Manifest, then convert to MEI
+                    const isManifest = checkIiifManifest(json)
+                    if (!isManifest) {
+                      // do some error handling
+                      return false
+                    }
+              
+                  // Access the width and height from the result
+                  const width = result.width;
+                  const height = result.height;
+          
+                  // Push the dimensions into the state
+                  state.pageDimenssion.push([width, height]);
+                })
+                .catch(error => {
+                  console.error("Error:", error);
+                })
+            );
+          }
+          
+          // Use Promise.all to wait for all fetch requests to complete
+          Promise.all(fetchPromises)
+            .then(() => {
+
+                  iiifManifest2mei(json, url, parser, state)
+                  
+              .then(mei => {
+                dispatch('setData', mei)
+              })
+              })
+              .catch(err => {
+                commit('SET_LOADING', false)
+                console.log(err)
+                // add some error message
+              })
             })
-        })
-        .catch(err => {
-          commit('SET_LOADING', false)
-          console.log(err)
-          // add some error message
-        })
+            .catch(error => {
+              console.error("Error with one of the promises:", error);
+            });
+        
+                    
+        
+ 
+
+
+
+
     },
     importXML({ commit, dispatch }, mei) {
       fetch(mei)
@@ -916,8 +964,10 @@ export default createStore({
     },
     setData({ commit }, mei) {
       const pageArray = getPageArray(mei)
+      console.log("page array is ", pageArray)
       commit('SET_PAGES', pageArray)
       console.log("this is SET_PAGES ", mei)
+
 
       commit('SET_XML_DOC', mei)
       console.log("this is SET_XML_DOC ", mei)
@@ -1020,7 +1070,6 @@ export default createStore({
           .then(json => {
             console.log('retrieved info.json for ' + url)
             commit('RECEIVE_IMAGE_IMPORT', { url, index, json })
-            console.log(json)
           })
           .catch(err => {
             console.log('Unable to fetch ' + url + ': ' + err)
@@ -1097,6 +1146,7 @@ export default createStore({
     pages: state => {
       const arr = []
       state.pages.forEach(page => {
+        console.log("this is the page width and height at index", page.width, " " , page.height)
         const obj = {
           tileSource: page.uri,
           width: page.width,
