@@ -1,13 +1,14 @@
 import { uuid } from '@/tools/uuid.js'
 
-function addPage (canvas, dimension, n, file, meiSurfaceTemplate, hasItems) {
+function addPage (canvas,canvases,  dimension, n, file, meiSurfaceTemplate, hasItems) {
  // var imgsrc = canvas.images[0].resource.service['@id']+"/info.json"
   //var width, height =  getDimention(imgsrc)
 
   const label = canvas.label
   var width 
   var height  
-  if(n < 120){
+  if(n <= canvases.length){
+    console.log(" number is",  n , "dimenssion ", dimension, "canvas width ", canvas.width , "canvas height ", canvas.height )
     height = dimension[1]
     width =  dimension[0]
 
@@ -108,7 +109,7 @@ export async function iiifManifest2mei (json, url, parser, state) {
       if(json.sequences){
         json.sequences[0].canvases.forEach((canvas, i) => {
           var hasItems = false
-          addPage(canvas, state.pageDimenssion[i + 1], i + 1, file, meiSurfaceTemplate, hasItems)
+          addPage(canvas, json.sequences[0].canvases, state.pageDimension[i], i + 1, file, meiSurfaceTemplate, hasItems)
 
         })
       }else{
