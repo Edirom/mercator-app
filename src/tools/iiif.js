@@ -91,7 +91,7 @@ export async function iiifManifest2mei (json, url, parser, state) {
       file.querySelector('change date').setAttribute('isodate', new Date().toISOString().substring(0, 10))
       file.querySelector('changeDesc ptr').setAttribute('target', '#' + sourceId)
 
-      try {
+      try {   
         const metadata = json.metadata
 
         const shelfmark = metadata.find(entry => { return entry.label === 'Signatur' }).value
