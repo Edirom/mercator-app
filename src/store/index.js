@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { iiifManifest2mei, checkIiifManifest, getPageArray } from '@/tools/iiif.js'
 import { meiZone2annotorious, annotorious2meiZone, measureDetector2meiZone, generateMeasure, insertMeasure, addZoneToLastMeasure, deleteZone, setMultiRest, createNewMdiv, moveContentToMdiv, toggleAdditionalZone, addImportedPage } from '@/tools/meiMappings.js'
+import { toRaw } from 'vue';
 
 import { mode as allowedModes } from '@/store/constants.js'
 import qs from 'qs';
@@ -60,7 +61,9 @@ export default createStore({
     importingImages: [],
     currentMeasureId: null,
     username: null,// used for the MeasureModal
-    infoJson: []
+    infoJson: [],
+    currentheight: "",
+    currentwidth: ""
 
     // TODO isScore: true
   },
@@ -115,7 +118,18 @@ export default createStore({
     SET_USERNAME(state, username) {
       state.username = username
     },
+    SET_CURRENT_WIDTH(state, height) {
+      state.currentheight = height
+    },
+    SET_CURRENT_HEIGHT(state, width) {
+      state.currentheight = width
+    },
+    SET_PAGE_ARRAY(state, updatedArray) {
+      state.pages = toRaw(updatedArray)
+      console.log("this is the updated array ", state.pages)
+    },
     SET_CURRENT_PAGE(state, i) {
+      console.log("current page is ", state.currentPage)
       console.log("page is changed ", state.pages.length)
       if (i > -1 && i < state.pages.length) {
         state.currentPage = i
@@ -296,6 +310,13 @@ export default createStore({
         state.xmlDoc = xmlDoc
       }
     },
+    SET_PAGE_DIMENSIONS(state, { index, width, height }) {
+      console.log("width is ", width)
+
+      // Ensure the update is reactive
+      state.pages[index].width =  width;
+      state.pages[index].height = height;
+    },
     CREATE_NEW_MDIV(state) {
       const xmlDoc = state.xmlDoc.cloneNode(true)
       state.currentMdivId = createNewMdiv(xmlDoc, state.currentMdivId)
@@ -380,6 +401,7 @@ export default createStore({
       console.log("this is branch " + branch)
       state.branch = branch
     },
+    
   },
   actions: {
     async fetchDirectories({ state, commit }) {
@@ -483,6 +505,16 @@ export default createStore({
     setCurrentPage({ commit }, i) {
       console.log('setting current page to ' + i)
       commit('SET_CURRENT_PAGE', i)
+    },
+    setWidth({ commit }, width) {
+      commit('SET_CURRENT_WIDTH', width)
+    },
+    setHeight({ commit }, height) {
+      commit('SET_CURRENT_HEIGHT', height)
+    },
+    updatePage({ commit }, upatedArr) {
+      console.log("hi everyone")
+      commit('SET_PAGE_ARRAY', upatedArr)
     },
     setCurrentPageZone({ commit }, j) {
       commit('SET_TOTAL_ZONES_COUNT', j)
@@ -796,151 +828,38 @@ export default createStore({
       commit('SET_BRANCH', branch)
     },
     importIIIF({ commit, dispatch, state }, url) {
-      commit('SET_LOADING', true);
-    
-      // Fetch the IIIF manifest
+      commit('SET_LOADING', true)
       fetch(url)
-        .then(res => res.json())
-        .then(json => {
-          commit('SET_LOADING', false);
-          commit('SET_PROCESSING', true);
-    
-          let canvases = json.sequences[0].canvases;
-    
-          // Process each canvas one by one, sequentially
-          const processCanvasesSequentially = async () => {
-            for (let i = 0; i < canvases.length; i++) {
-              try {
-                // Build the info.json URL for the current canvas
-                const infoUrl = canvases[i].images[0].resource.service['@id'] + "/info.json";
-                
-                // Push the URL to the state.infoJson array
-                state.infoJson.push(infoUrl);
-                
-                // Fetch the info.json
-                const res = await fetch(infoUrl);
-                const result = await res.json();
-    
-                // Check if this is a proper IIIF Manifest, then convert to MEI
-                const isManifest = checkIiifManifest(json);
-                if (!isManifest) {
-                  throw new Error("Invalid IIIF manifest");
-                }
-    
-                // Extract the width and height from the result
-                const width = result.width;
-                const height = result.height;
-    
-                // Push the dimensions into the state.pageDimension array
-                state.pageDimension.push([width, height]);
-    
-              } catch (error) {
-                console.error(`Error processing canvas ${i}:`, error);
-                throw error; // This will stop the loop and be caught in the outer catch block
-              }
-            }
-          };
-    
-          // Call the sequential processing function
-          processCanvasesSequentially()
-            .then(() => {
-              // After processing all canvases, convert the manifest to MEI
-              return iiifManifest2mei(json, url, parser, state);
-            })
-            .then(mei => {
-              // Dispatch setData with the generated MEI
-              dispatch('setData', mei);
-            })
-            .catch(err => {
-              console.error('Error processing IIIF manifest or canvases:', err);
-              commit('SET_LOADING', false);
-              // Add any additional error messaging here
-            })
-            .finally(() => {
-              commit('SET_PROCESSING', false); // Ensure processing is set to false after completion
-            });
+        .then(res => {
+          return res.json()
         })
-        .catch(error => {
-          // Handle errors in the initial IIIF manifest fetch
-          console.error('Error fetching IIIF manifest:', error);
-          commit('SET_LOADING', false);
-        });
-    },
-    importIIIF({ commit, dispatch, state }, url) {
-      commit('SET_LOADING', true);
-    
-      // Fetch the IIIF manifest
-      fetch(url)
-        .then(res => res.json())
         .then(json => {
-          commit('SET_LOADING', false);
-          commit('SET_PROCESSING', true);
-    
-          let canvases = json.sequences[0].canvases;
-    
-          // Map all canvas images to their info.json URLs
-          const infoJsonUrls = canvases.map(canvas => {
-            return canvas.images[0].resource.service['@id'] + "/info.json";
-          });
-    
-          // Store all fetch promises for info.json
-          const fetchPromises = infoJsonUrls.map((infoUrl) => {
-            return fetch(infoUrl)
-              .then(res => res.json())
-              .then(result => {
-                // Check if this is a proper IIIF Manifest
-                const isManifest = checkIiifManifest(json);
-                if (!isManifest) {
-                  throw new Error("Invalid IIIF manifest");
-                }
-    
-                // Extract the width and height from the result
-                const width = result.width;
-                const height = result.height;
-    
-                // Return both the infoUrl and the dimensions
-                return { infoUrl, dimensions: [width, height] };
-              })
-              .catch(error => {
-                console.error(`Error fetching ${infoUrl}:`, error);
-                // Return a fallback object in case of error, to keep the promise chain going
-                return { infoUrl, dimensions: [null, null], error: true };
-              });
-          });
-    
-          // Use Promise.allSettled to fetch all info.json files concurrently and wait for all of them
-          Promise.allSettled(fetchPromises)
-            .then((results) => {
-              // Update state.infoJson and state.pageDimension in batches
-              results.forEach(result => {
-                if (result.status === 'fulfilled') {
-                  state.infoJson.push(result.value.infoUrl);
-                  state.pageDimension.push(result.value.dimensions);
-                }
-              });
-    
-              // After processing all canvases, convert the manifest to MEI
-              return iiifManifest2mei(json, url, parser, state);
-            })
+          commit('SET_LOADING', false)
+          commit('SET_PROCESSING', true)
+          // check if this is a proper IIIF Manifest, then convert to MEI
+          const isManifest = checkIiifManifest(json)
+          console.log('isManifest: ' + isManifest)
+          if (!isManifest) {
+            // do some error handling
+            return false
+          }
+
+          iiifManifest2mei(json, url, parser, state)
             .then(mei => {
-              // Dispatch setData with the generated MEI
-              dispatch('setData', mei);
+              dispatch('setData', mei)
             })
-            .catch(err => {
-              console.error('Error processing IIIF manifest or canvases:', err);
-              commit('SET_LOADING', false);
-              // Add any additional error messaging here
-            })
-            .finally(() => {
-              commit('SET_PROCESSING', false); // Ensure processing is set to false after completion
-            });
         })
-        .catch(error => {
-          // Handle errors in the initial IIIF manifest fetch
-          console.error('Error fetching IIIF manifest:', error);
-          commit('SET_LOADING', false);
-        });
+        .catch(err => {
+          commit('SET_LOADING', false)
+          console.log(err)
+          // add some error message
+        })
     },
+    updatePageDimensions({ commit }, { index, width, height }) {
+      commit('SET_PAGE_DIMENSIONS', { index, width, height });
+
+    },
+
         
     importXML({ commit, dispatch }, mei) {
       fetch(mei)
@@ -1221,13 +1140,12 @@ export default createStore({
     pages: state => {
       const arr = []
       state.pages.forEach(page => {
-        console.log("this is the page width and height at index", page.width, " " , page.height)
+
         const obj = {
           tileSource: page.uri,
-          width: page.width,
-          x: 0,
-          y: 0
+          width: page.width
         }
+        console.log("current width is ", state.currentwidth)
         arr.push(obj)
       })
       return arr
