@@ -122,7 +122,7 @@ export default createStore({
       state.currentheight = height
     },
     SET_CURRENT_HEIGHT(state, width) {
-      state.currentheight = width
+      state.currentwidth = width
     },
     SET_PAGE_ARRAY(state, updatedArray) {
       state.pages = toRaw(updatedArray)
