@@ -4,7 +4,6 @@ on:
   push:
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -38,3 +37,19 @@ jobs:
     - name: deploy
       run: | 
         curl -X POST https://keel1.edirom.de/v1/webhooks/native -H 'Content-Type: application/json' -d '{"name": "ghcr.io/edirom/cartographer-app", "tag": "dev"}'
+
+  clean:
+    name: remove untagged images from Github package registry
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      packages: write
+    steps:
+      - name: ghcr.io cleanup action
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-untagged: true
+          dry-run: false
+          validate: true
+          older-than: 2 weeks
+          token: ${{ secrets.GITHUB_TOKEN }}
