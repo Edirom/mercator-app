@@ -113,6 +113,7 @@ export default {
     }
   },
   mounted: function () {
+
     this.viewer = OpenSeadragon({
       id: 'osdContainer',
       preserveViewport: false,
@@ -229,13 +230,35 @@ export default {
     this.unwatchPages = this.$store.watch((state, getters) => getters.pages,
       (newArr, oldArr) => {
         this.viewer.open(newArr)
-        this.$store.dispatch('setCurrentPage', 0)
-      })
+        this.viewer.addHandler("open", () => {
+          if (this.viewer.source) {
+            // Access the image dimensions after it has loaded
+            const width = this.viewer.source.dimensions.x;
+            const height = this.viewer.source.dimensions.y;
+                newArr.forEach((obj, index) => {
+              // Dispatch an action for each page with the updated width and height
+              this.$store.dispatch("updatePageDimensions", {
+                index,
+                width,
+                height
+              });
+            });
+
+
+          }else{
+            console.log("erroring")
+          }
+
+        })
+        console.log("this is the width of the current page ", this.$store.state.currentwidth)
+        })
 
     this.unwatchCurrentPage = this.$store.watch((state, getters) => getters.currentPageIndexZeroBased,
       (newPage, oldPage) => {
+
         this.viewer.goToPage(newPage)
       })
+      
 
     this.unwatchZonesOnCurrentPage = this.$store.watch((state, getters) => getters.zonesOnCurrentPage,
       (newArr, oldArr) => {

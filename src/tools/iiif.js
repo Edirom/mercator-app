@@ -1,19 +1,10 @@
 import { uuid } from '@/tools/uuid.js'
 
-function addPage (canvas,canvases,  dimension, n, file, meiSurfaceTemplate, hasItems) {
- // var imgsrc = canvas.images[0].resource.service['@id']+"/info.json"
-  //var width, height =  getDimention(imgsrc)
-
+function addPage (canvas, n, file, meiSurfaceTemplate, hasItems) {
+  console.log("this is the meisurface " , canvas)
   const label = canvas.label
-  var width 
-  var height  
-  if(n <= canvases.length){
-    console.log(" number is",  n , "dimenssion ", dimension, "canvas width ", canvas.width , "canvas height ", canvas.height )
-    height = dimension[1]
-    width =  dimension[0]
-
-  }
-
+  const height = canvas.height
+  const width = canvas.width
   var uri = ""
   if(hasItems == true){
     console.log("has item is true")
@@ -23,6 +14,7 @@ function addPage (canvas,canvases,  dimension, n, file, meiSurfaceTemplate, hasI
      uri = canvas?.images[0]?.resource?.service['@id']+"/info.json"
   }
 
+  console.log("this is the url " + uri )
 
   const surfaceId = 's' + uuid()
   const graphicId = 'g' + uuid()
@@ -46,24 +38,11 @@ function addPage (canvas,canvases,  dimension, n, file, meiSurfaceTemplate, hasI
   file.querySelector('facsimile').appendChild(surface)
 }
 
-async function getDimension(imgsrc) {
-  try {
-    const res = await fetch(imgsrc);
-    const json = await res.json();
-    const { width, height } = json;  // Assuming the dimensions are in the JSON response
-    return { width, height };
-  } catch (error) {
-    console.error('Error fetching image dimensions:', error);
-    return null;
-  }
-}
-
-
-
-export async function iiifManifest2mei (json, url, parser, state) {
+export async function iiifManifest2mei (json, url, parser) {
   const promises = []
   let meiFileTemplate
   let meiSurfaceTemplate
+
   promises.push(
     fetch('./assets/meiFileTemplate.xml')
       .then(res => res.text())
@@ -109,14 +88,12 @@ export async function iiifManifest2mei (json, url, parser, state) {
       if(json.sequences){
         json.sequences[0].canvases.forEach((canvas, i) => {
           var hasItems = false
-          addPage(canvas, json.sequences[0].canvases, state.pageDimension[i], i + 1, file, meiSurfaceTemplate, hasItems)
-
+          addPage(canvas, i + 1, file, meiSurfaceTemplate, hasItems)
         })
       }else{
         json.items.forEach((canvas, i) => {
           var hasItems = true
           addPage(canvas, i + 1, file, meiSurfaceTemplate, hasItems)
-
         })
       }
       return file
@@ -144,13 +121,18 @@ export function getPageArray (mei) {
   const arr = []
   mei.querySelectorAll('surface').forEach((surface, n) => {
     const graphic = surface.querySelector('graphic')
+
     const obj = {}
     obj.uri = graphic.getAttributeNS('', 'target').trim()
+    console.log("this is the target ", obj.uri)
     obj.id = surface.getAttribute('xml:id').trim()
+    console.log("this is the id ", obj.id)
     obj.n = surface.getAttributeNS('', 'n').trim()
+    console.log("this is the n ", obj.n)
     //obj.label = surface.getAttributeNS('', 'label').trim()
-    obj.width = parseInt(graphic.getAttributeNS('', 'width').trim(), 10)
-    obj.height = parseInt(graphic.getAttributeNS('', 'height').trim(), 10)
+    console.log("this is the label ", obj.label)
+    // obj.width = parseInt(graphic.getAttributeNS('', 'width').trim(), 10)
+    // obj.height = parseInt(graphic.getAttributeNS('', 'height').trim(), 10)
     obj.hasSvg = surface.querySelector('svg') !== null // exists(svg:svg) inside relevant /surface
     obj.hasZones = surface.querySelector('zone') !== null // exists(mei:zone) inside relevant /surface
 
