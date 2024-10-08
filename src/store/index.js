@@ -107,30 +107,26 @@ export default createStore({
       state.selectedDirectory = gitdirec
     },
     SET_XML_DOC(state, xmlDoc) {
-      console.log("this is the xml doc in set ", xmlDoc)
+console.log("this is the xml doc in set ", xmlDoc)
       state.xmlDoc = xmlDoc
       state.currentPage = 0
     },
     SET_PAGES(state, pageArray) {
       state.pages = pageArray
-      console.log("this is the length of pages ", state.pages)
     },
     SET_USERNAME(state, username) {
       state.username = username
     },
-    SET_CURRENT_WIDTH(state, height) {
+    SET_CURRENT_HEIGHT(state, height) {
       state.currentheight = height
     },
-    SET_CURRENT_HEIGHT(state, width) {
+    SET_CURRENT_WIDTH(state, width) {
       state.currentwidth = width
     },
     SET_PAGE_ARRAY(state, updatedArray) {
       state.pages = toRaw(updatedArray)
-      console.log("this is the updated array ", state.pages)
     },
     SET_CURRENT_PAGE(state, i) {
-      console.log("current page is ", state.currentPage)
-      console.log("page is changed ", state.pages.length)
       if (i > -1 && i < state.pages.length) {
         state.currentPage = i
       }
@@ -503,7 +499,6 @@ export default createStore({
       commit('TOGGLE_MEASURE_LIST')
     },
     setCurrentPage({ commit }, i) {
-      console.log('setting current page to ' + i)
       commit('SET_CURRENT_PAGE', i)
     },
     setWidth({ commit }, width) {
@@ -1145,8 +1140,9 @@ export default createStore({
           tileSource: page.uri,
           width: page.width
         }
-        console.log("current width is ", state.currentwidth)
         arr.push(obj)
+        console.log("array is ", arr)
+
       })
       return arr
     },

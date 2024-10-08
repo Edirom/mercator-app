@@ -131,8 +131,8 @@ export function getPageArray (mei) {
     console.log("this is the n ", obj.n)
     //obj.label = surface.getAttributeNS('', 'label').trim()
     console.log("this is the label ", obj.label)
-    obj.width = parseInt(graphic.getAttributeNS('', 'width').trim(), 10)
-    obj.height = parseInt(graphic.getAttributeNS('', 'height').trim(), 10)
+    // obj.width = parseInt(graphic.getAttributeNS('', 'width').trim(), 10)
+    // obj.height = parseInt(graphic.getAttributeNS('', 'height').trim(), 10)
     obj.hasSvg = surface.querySelector('svg') !== null // exists(svg:svg) inside relevant /surface
     obj.hasZones = surface.querySelector('zone') !== null // exists(mei:zone) inside relevant /surface
 

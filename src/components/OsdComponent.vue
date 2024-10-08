@@ -251,9 +251,7 @@ export default {
 
         })
         console.log("this is the width of the current page ", this.$store.state.currentwidth)
-        
-        this.$store.dispatch('setCurrentPage', 0)
-      })
+        })
 
     this.unwatchCurrentPage = this.$store.watch((state, getters) => getters.currentPageIndexZeroBased,
       (newPage, oldPage) => {
