@@ -1,4 +1,4 @@
-opeFROM node:latest as builder
+FROM node:latest as builder
 
 WORKDIR /usr/app
 COPY . .
