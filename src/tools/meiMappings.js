@@ -376,7 +376,7 @@ export function insertMeasure (xmlDoc, measure, state, currentZone, pageIndex, t
             state.currentMdivId =  mdivArray[mdivArray.length-1].getAttribute("xml:id")
             targetMdiv = [...xmlDoc.querySelectorAll('mdiv')].find(mdiv => mdiv.getAttribute('xml:id') === state.currentMdivId)
             const precedingMeasure = targetMdiv.querySelector('measure[facs~="#' + precedingZoneId + '"]')
-
+            console.log("proceeding measure is ", precedingMeasure)
             newMeasure.setAttribute('n', incrementMeasureNum(precedingMeasure.getAttribute('n'), 1))
             precedingMeasure.after(newMeasure)
   
@@ -386,13 +386,28 @@ export function insertMeasure (xmlDoc, measure, state, currentZone, pageIndex, t
 
           }else{
             const precedingMeasure = targetMdiv.querySelector('measure[facs~="#' + precedingZoneId + '"]')
+            if(precedingMeasure.childNodes.length > 0){
+              const previousMultiRests = precedingMeasure.querySelectorAll('multiRest')
 
-            newMeasure.setAttribute('n', incrementMeasureNum(precedingMeasure.getAttribute('n'), 1))
-            precedingMeasure.after(newMeasure)
+              var multiRest =  previousMultiRests[0].getAttribute('num')
+
+             
+              newMeasure.setAttribute('n', incrementMeasureNum(precedingMeasure.getAttribute('n'), parseInt(multiRest)))
+              precedingMeasure.after(newMeasure)
+              // create sb, insert after preceding measure
+              const sb = document.createElementNS('http://www.music-encoding.org/ns/mei', 'sb')
+              precedingMeasure.after(sb)
+    
+            }else{
+              newMeasure.setAttribute('n', incrementMeasureNum(precedingMeasure.getAttribute('n'), 1))
+              precedingMeasure.after(newMeasure)
+    
+              // create sb, insert after preceding measure
+              const sb = document.createElementNS('http://www.music-encoding.org/ns/mei', 'sb')
+              precedingMeasure.after(sb)
+            }
+
   
-            // create sb, insert after preceding measure
-            const sb = document.createElementNS('http://www.music-encoding.org/ns/mei', 'sb')
-            precedingMeasure.after(sb)
           }
 
         }
@@ -488,8 +503,9 @@ export function getFollowingMeasuresByMeasure (measure) {
 export function addZoneToLastMeasure (xmlDoc, zoneId) {
   const measure = getLastMeasure(xmlDoc)
   const oldFacs = measure.hasAttribute('facs') ? measure.getAttribute('facs') + ' ' : ''
-  console.log(oldFacs)
+  console.log("last measure ", measure)
   measure.setAttribute('facs', oldFacs + '#' + zoneId)
+  console.log("new measure ", measure)
 }
 
 /* // this works, but isn't currently used
@@ -782,9 +798,11 @@ export function setMultiRest (measure, val) {
       // no existing multiRest, and no multiRest is wanted -> do nothing
     }
   }
-  const diff = ((val !== null) ? val : 1) - oldVal
-  const followingMeasures = getFollowingMeasuresByMeasure(measure)
 
+  const diff = ((val !== null) ? val : 1) - oldVal
+  console.log("old value ", oldVal, " diff: ", diff, " val: ", val)
+
+  const followingMeasures = getFollowingMeasuresByMeasure(measure)
   if (diff !== 0) {
     followingMeasures.forEach(measure => {
       measure.setAttribute('n', incrementMeasureNum(measure.getAttribute('n'), diff))
@@ -852,7 +870,6 @@ export function moveContentToMdiv (xmlDoc, firstMeasureId, targetMdivId, state) 
       const zones = getZonesFromMeasure(xmlDoc, measure)
       const surfaceId = zones[0].closest('surface').getAttribute('xml:id')
       const pageIndex = state.pages.findIndex(page => page.id === surfaceId)
-
       insertMeasure(xmlDoc, measure, state, zones[0], pageIndex, mdiv)
     })
   }
@@ -860,7 +877,7 @@ export function moveContentToMdiv (xmlDoc, firstMeasureId, targetMdivId, state) 
 
 /**
  * This creates a new page through the image import modal
- * @param {[type]} xmlDoc  [description]
+ * @param {[  type]} xmlDoc  [description]
  * @param {[type]} index   [description]
  * @param {[type]} url     [description]
  * @param {[type]} width   [description]
